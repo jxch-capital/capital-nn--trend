@@ -64,7 +64,7 @@ class MarkPool(object):
     def update_mark(self, row):
         # 只保留未被止损的入场点
         self.buy_pool = list(filter(lambda item: item['stop'] < row['low'], self.buy_pool))
-        self.sell_pool = list(filter(lambda item: item['stop'] > row['low'], self.sell_pool))
+        self.sell_pool = list(filter(lambda item: item['stop'] > row['high'], self.sell_pool))
         # 达到目标盈亏比
         self.mark_write(list(filter(lambda item: self.buy_success(row, item), self.buy_pool)))
         self.buy_pool = list(filter(lambda item: not self.buy_success(row, item), self.buy_pool))
