@@ -42,7 +42,7 @@ class SetBuilder(object):
         df.reset_index(inplace=True, drop=True)
         return neighbor_normalized(df)
 
-    def random_one(self):
+    def random_one(self, normalized=True):
         for i in range(10):
             arr_index_random = random.randint(0, len(self.random_arr) - 1)
             available_index = self.random_arr[arr_index_random]['available_index']
@@ -56,12 +56,13 @@ class SetBuilder(object):
             available_index_random = random.randint(0, len(available_index) - 1)
             index = available_index[available_index_random]
             del available_index[available_index_random]
-            return self.normalized(self.random_arr[arr_index_random]['raw_data'][index:index + self.sliding].copy())
+            res_df = self.random_arr[arr_index_random]['raw_data'][index:index + self.sliding].copy()
+            return self.normalized(res_df) if normalized else res_df
 
-    def random_data_arr(self, size=100000):
+    def random_data_arr(self, size=100000, normalized=True):
         print('正在生成数据集...')
         start = datetime.datetime.now()
         try:
-            return [self.random_one() for i in range(size)]
+            return [self.random_one(normalized) for i in range(size)]
         finally:
             print(f'数据集生成完毕，耗时{(datetime.datetime.now() - start).seconds} s')
