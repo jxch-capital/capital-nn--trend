@@ -1,3 +1,3 @@
-import preprocessing.process as process
+import preprocessing.mark_strategy_1 as process
 
 process.process()
