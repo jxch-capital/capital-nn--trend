@@ -6,7 +6,6 @@ mark_path = '../res/mark_strategy_1/'
 slice_path = '../res/slice/'
 
 
-# 265
 def process():
     slice_pool = SlicePool(slice_path)
     all_file_paths = file_paths(mark_path)
