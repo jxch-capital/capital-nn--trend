@@ -23,7 +23,7 @@ class MarkPool(object):
 
     @staticmethod
     def is_cross_bar(row):
-        return abs(row['open'] - row['close']) == 0 or (row['high'] - row['low']) / abs(row['open'] - row['close']) > 10
+        return abs(row['open'] - row['close']) == 0 or (row['high'] - row['low']) / abs(row['open'] - row['close']) > 5
 
     @staticmethod
     def is_bull_bar(row):
