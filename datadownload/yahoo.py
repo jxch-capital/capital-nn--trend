@@ -1,10 +1,7 @@
 import yfinance as yf
-import utils.socket_util as socket_util
 import pandas as pd
 
-socket_util.set_proxy()
-
-res_path = '../res/excel/'
+excel_path = '../res/raw/'
 intervals_d = ['1d', '5d', '1wk', '1mo', '3mo']
 intervals_m = ['5m', '15m', '30m', '60m', '90m']
 
@@ -24,10 +21,12 @@ codes = {
     'china-blue': '600519.SS,600600.SS,601318.SS,600887.SS,603288.SS,000538.SZ,000333.SZ,002594.SZ,601607.SS,000002.SZ',
 }
 
-for key, code_str in codes.items():
-    excel_filepath = f'{res_path}{key}-d.xlsx'
-    with pd.ExcelWriter(excel_filepath) as writer:
-        for interval in intervals_d:
-            df = yf.download(code_str, interval=interval, period='max')
-            df.to_excel(excel_writer=writer, sheet_name=f'{interval}')
-            print(f'end: {excel_filepath}-{interval}')
+
+def download():
+    for key, code_str in codes.items():
+        filepath = f'{excel_path}{key}-d.xlsx'
+        with pd.ExcelWriter(filepath) as writer:
+            for interval in intervals_d:
+                df = yf.download(code_str, interval=interval, period='max')
+                df.to_excel(excel_writer=writer, sheet_name=f'{interval}')
+                print(f'end: {filepath}-{interval}')
