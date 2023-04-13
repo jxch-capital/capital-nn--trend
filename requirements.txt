@@ -1,0 +1,5 @@
+Flask==2.2.2
+SocksiPy_branch==1.01
+tensorflow==2.12.0
+tensorflow_intel==2.12.0
+yfinance==0.2.17
