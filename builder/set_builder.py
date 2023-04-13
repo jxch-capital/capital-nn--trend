@@ -4,6 +4,7 @@ import datetime
 from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED, FIRST_COMPLETED
 import threading
 import random
+from utils.stockstats_util import neighbor_normalized
 
 lock = threading.Lock()
 
@@ -33,9 +34,17 @@ class SetBuilder(object):
         print(f'随机器构造完成，耗时{(datetime.datetime.now() - start).seconds} s')
         executor.shutdown()
 
+    def build_debug(self):
+        path = file_paths(self.slice_path)[0]
+        self.build_random_arr(path)
+
+    def normalized(self, df):
+        df.reset_index(inplace=True, drop=True)
+        return neighbor_normalized(df)
+
     def random_one(self):
         for i in range(10):
-            arr_index_random = random.randint(0, len(self.random_arr))
+            arr_index_random = random.randint(0, len(self.random_arr) - 1)
             available_index = self.random_arr[arr_index_random]['available_index']
             if i != 9 and len(available_index) == 0:
                 continue
@@ -44,10 +53,10 @@ class SetBuilder(object):
                     range(0, self.random_arr[arr_index_random]['raw_data'].shape[0] - self.sliding)
                 available_index = self.random_arr[arr_index_random]['available_index']
 
-            available_index_random = random.randint(0, len(available_index))
+            available_index_random = random.randint(0, len(available_index) - 1)
             index = available_index[available_index_random]
             del available_index[available_index_random]
-            return self.random_arr[arr_index_random]['raw_data'][index:index + self.sliding]
+            return self.normalized(self.random_arr[arr_index_random]['raw_data'][index:index + self.sliding].copy())
 
     def random_data_arr(self, size=100000):
         print('正在生成数据集...')
