@@ -4,13 +4,13 @@ import datetime
 from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED, FIRST_COMPLETED
 import threading
 import random
-from utils.stockstats_util import neighbor_normalized
+from utils.stockstats_util import neighbor_normalized, overall_normalized
 
 lock = threading.Lock()
 
 
 class SetBuilder(object):
-    def __init__(self, slice_path, sliding=1000):
+    def __init__(self, slice_path, sliding=200):
         self.slice_path = slice_path
         self.sliding = sliding
         self.random_arr = []
@@ -19,9 +19,12 @@ class SetBuilder(object):
         sheets = pd.read_excel(path, sheet_name=None)
         for sheet_name, df in sheets.items():
             df.drop(['Unnamed: 0'], axis=1, inplace=True)
+            available_index = list(map(lambda x: x - self.sliding+1, list(
+                filter(lambda x: x > self.sliding, df[df['mark'] > 0].index.values))))
             with lock:
                 self.random_arr.append({
-                    'available_index': list(range(0, df.shape[0] - self.sliding)),
+                    # 'available_index': list(range(0, df.shape[0] - self.sliding)),
+                    'available_index': available_index,
                     'raw_data': df,
                 })
 
@@ -40,7 +43,7 @@ class SetBuilder(object):
 
     def normalized(self, df):
         df.reset_index(inplace=True, drop=True)
-        return neighbor_normalized(df)
+        return overall_normalized(df)
 
     def random_one(self, normalized=True):
         for i in range(10):
@@ -49,13 +52,17 @@ class SetBuilder(object):
             if i != 9 and len(available_index) == 0:
                 continue
             elif i == 9 and len(available_index) == 0:
+                print('资源已经用尽')
                 self.random_arr[arr_index_random]['available_index'] = \
-                    range(0, self.random_arr[arr_index_random]['raw_data'].shape[0] - self.sliding)
+                    list(range(0, self.random_arr[arr_index_random]['raw_data'].shape[0] - self.sliding))
                 available_index = self.random_arr[arr_index_random]['available_index']
 
             available_index_random = random.randint(0, len(available_index) - 1)
             index = available_index[available_index_random]
-            del available_index[available_index_random]
+            try:
+                del available_index[available_index_random]
+            except:
+                print('')
             res_df = self.random_arr[arr_index_random]['raw_data'][index:index + self.sliding].copy()
             return self.normalized(res_df) if normalized else res_df
 
