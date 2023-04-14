@@ -17,7 +17,7 @@ def find_all():
 def table_index():
     with config.db_conn() as conn:
         cur = conn.cursor()
-        cur.execute(f'alter table {config.db_schema}.{table_name} add id serial')
+        cur.execute(f'alter table {config.db_schema}.{table_name} add id bigserial')
         cur.execute(f'alter table {config.db_schema}.{table_name} add primary key(id)')
         cur.execute(
             f'create index download_codes_type_engine_index on {config.db_schema}.{table_name} (type, engine)')
