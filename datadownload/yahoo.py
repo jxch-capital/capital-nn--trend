@@ -4,7 +4,7 @@ import pandas as pd
 excel_path = '../res/raw/'
 intervals_d = ['1d', '5d', '1wk', '1mo', '3mo']
 intervals_m = ['5m', '15m', '30m', '60m', '90m']
-
+engine = 'yfinance'
 codes = {
     'us-it': 'QQQ,GOOGL,AAPL,MSFT,TSLA,AMZN,AMD,TSM,NVDA,META,INTC,IBM,ORCL,HPQ',
     'us-industry': 'SPY,XLI,XLE,XLY,XLP,XLF,XLV,XLC,XLB,XLRE,XLK,XLU',
@@ -26,7 +26,7 @@ def codes_df():
     codes_arr = []
     for key, val in codes.items():
         codes_arr.append({
-            'engine': 'yfinance',
+            'engine': engine,
             'type': key,
             'codes': val,
         })
@@ -41,3 +41,38 @@ def download():
                 df = yf.download(code_str, interval=interval, period='max')
                 df.to_excel(excel_writer=writer, sheet_name=f'{interval}')
                 print(f'end: {filepath}-{interval}')
+
+
+def download_by_codes(codes_str, intervals=None):
+    if intervals is None:
+        intervals = intervals_d
+    interval_df = {}
+    for interval in intervals:
+        interval_df[interval] = yf.download(codes_str, interval=interval, period='max')
+
+    return interval_df
+
+
+def df_arr2df(interval_df):
+    df_all = pd.DataFrame([])
+    for interval, df in interval_df.items():
+        for col_name in df['Close'].columns.values:
+            tmp_df = pd.DataFrame([])
+            tmp_df['Adj Close'] = df['Adj Close'][col_name]
+            tmp_df['Close'] = df['Close'][col_name]
+            tmp_df['High'] = df['High'][col_name]
+            tmp_df['Low'] = df['Low'][col_name]
+            tmp_df['Open'] = df['Open'][col_name]
+            tmp_df['Volume'] = df['Volume'][col_name]
+            tmp_df['interval'] = interval
+            tmp_df['Date'] = df.index
+            tmp_df['Code'] = col_name
+            tmp_df.dropna(axis=0, how='any', inplace=True)
+            tmp_df.reset_index(inplace=True, drop=True)
+            tmp_df['K_Index'] = tmp_df.index
+            if df_all.size == 0:
+                df_all = tmp_df
+            else:
+                df_all = pd.concat([df_all, tmp_df], sort=False)
+    df_all.reset_index(inplace=True, drop=True)
+    return df_all
