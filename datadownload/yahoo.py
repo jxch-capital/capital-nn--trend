@@ -22,6 +22,17 @@ codes = {
 }
 
 
+def codes_df():
+    codes_arr = []
+    for key, val in codes.items():
+        codes_arr.append({
+            'engine': 'yfinance',
+            'type': key,
+            'codes': val,
+        })
+    return pd.DataFrame(codes_arr)
+
+
 def download():
     for key, code_str in codes.items():
         filepath = f'{excel_path}{key}-d.xlsx'

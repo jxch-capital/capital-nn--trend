@@ -1,6 +1,7 @@
 Flask==2.2.2
 numpy==1.23.5
 pandas==2.0.0
+psycopg2==2.9.6
 SocksiPy_branch==1.01
 stockstats==0.5.2
 tensorflow==2.12.0
