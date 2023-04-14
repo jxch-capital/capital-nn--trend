@@ -5,7 +5,7 @@ class Config(object):
 
 class DevConfigWinLocal(Config):
     db_type = 'postgres'
-    db_connection = 'localhost'
+    db_connection = 'jdbc:postgresql://localhost:5432/capital'
 
 
 config = DevConfigWinLocal()
