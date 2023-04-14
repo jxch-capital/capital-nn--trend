@@ -58,18 +58,18 @@ def df_arr2df(interval_df):
     for interval, df in interval_df.items():
         for col_name in df['Close'].columns.values:
             tmp_df = pd.DataFrame([])
-            tmp_df['Adj Close'] = df['Adj Close'][col_name]
-            tmp_df['Close'] = df['Close'][col_name]
-            tmp_df['High'] = df['High'][col_name]
-            tmp_df['Low'] = df['Low'][col_name]
-            tmp_df['Open'] = df['Open'][col_name]
-            tmp_df['Volume'] = df['Volume'][col_name]
+            tmp_df['adj_close'] = df['Adj Close'][col_name]
+            tmp_df['close'] = df['Close'][col_name]
+            tmp_df['high'] = df['High'][col_name]
+            tmp_df['low'] = df['Low'][col_name]
+            tmp_df['open'] = df['Open'][col_name]
+            tmp_df['volume'] = df['Volume'][col_name]
             tmp_df['interval'] = interval
-            tmp_df['Date'] = df.index
-            tmp_df['Code'] = col_name
+            tmp_df['date'] = df.index
+            tmp_df['code'] = col_name
             tmp_df.dropna(axis=0, how='any', inplace=True)
             tmp_df.reset_index(inplace=True, drop=True)
-            tmp_df['K_Index'] = tmp_df.index
+            tmp_df['k_index'] = tmp_df.index
             if df_all.size == 0:
                 df_all = tmp_df
             else:

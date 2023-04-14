@@ -1,6 +1,7 @@
 import datadownload.yahoo as yahoo
 import db.codes_db as codes_db
 from config import config
+import pandas as pd
 
 table_name = 'raw_k'
 
@@ -22,5 +23,21 @@ def table_index():
         cur.execute(f'alter table {config.db_schema}.{table_name} add id bigserial')
         cur.execute(f'alter table {config.db_schema}.{table_name} add primary key(id)')
         cur.execute(
-            f'create index "raw_k_Code_interval_K_Index_Date_index" on {config.db_schema}.{table_name} ("Code", interval, "K_Index", "Date")')
+            f'create index "raw_k_Code_interval_K_Index_Date_index" on {config.db_schema}.{table_name} (code, interval, k_index, date)')
         conn.commit()
+
+
+def find_all():
+    return pd.read_sql(f'select * from {config.db_schema}.{table_name}', con=config.pd2db_conn())
+
+
+def find_all_by_code(code_arr, interval):
+    code_arr = list(map(lambda x: f"'{x}'", code_arr))
+    return pd.read_sql(
+        f"select * from {config.db_schema}.{table_name} where code in ({','.join(code_arr)}) and interval='{interval}'",
+        con=config.pd2db_conn())
+
+
+def find_all_by_interval(interval):
+    return pd.read_sql(f"select * from {config.db_schema}.{table_name} where interval='{interval}'",
+                       con=config.pd2db_conn())

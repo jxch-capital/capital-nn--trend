@@ -8,6 +8,8 @@ import datetime
 # db.raw_k2db()
 # print(f'耗时：{(datetime.datetime.now() - start).seconds} s')
 
-
-db.table_index()
+start = datetime.datetime.now()
+df = db.find_all_by_code(["AAPL","TSM"],'1d')
+print(f'查询耗时：{(datetime.datetime.now() - start).seconds} s')
+print(df)
 
