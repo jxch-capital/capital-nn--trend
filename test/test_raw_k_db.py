@@ -9,7 +9,7 @@ import datetime
 # print(f'耗时：{(datetime.datetime.now() - start).seconds} s')
 
 start = datetime.datetime.now()
-df = db.find_all_by_code(["AAPL","TSM"],'1d')
+df = db.find_all_by_code(['AAPL','TSM'])
 print(f'查询耗时：{(datetime.datetime.now() - start).seconds} s')
 print(df)
 

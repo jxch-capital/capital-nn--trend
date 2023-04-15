@@ -31,13 +31,18 @@ def find_all():
     return pd.read_sql(f'select * from {config.db_schema}.{table_name}', con=config.pd2db_conn())
 
 
-def find_all_by_code(code_arr, interval):
+def find_all_by_code(code_arr):
     code_arr = list(map(lambda x: f"'{x}'", code_arr))
     return pd.read_sql(
-        f"select * from {config.db_schema}.{table_name} where code in ({','.join(code_arr)}) and interval='{interval}'",
+        f"select * from {config.db_schema}.{table_name} where code in ({','.join(code_arr)})",
         con=config.pd2db_conn())
 
 
 def find_all_by_interval(interval):
     return pd.read_sql(f"select * from {config.db_schema}.{table_name} where interval='{interval}'",
+                       con=config.pd2db_conn())
+
+
+def find_by_code_and_interval(code, interval):
+    return pd.read_sql(f"select * from {config.db_schema}.{table_name} where code='{code}' and interval='{interval}'",
                        con=config.pd2db_conn())
