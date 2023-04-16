@@ -1,0 +1,1 @@
+intervals_d = ['1d', '5d', '1wk', '1mo', '3mo']

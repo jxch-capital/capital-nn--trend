@@ -1,0 +1,12 @@
+atomics==1.0.2
+Flask==2.2.2
+numpy==1.23.5
+pandas==2.0.0
+psycopg2==2.9.6
+PyMySQL==1.0.3
+SocksiPy_branch==1.01
+SQLAlchemy==2.0.9
+stockstats==0.5.2
+tensorflow==2.12.0
+tensorflow_intel==2.10.0
+yfinance==0.2.17
