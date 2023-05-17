@@ -44,5 +44,7 @@ def find_all_by_interval(interval):
 
 
 def find_by_code_and_interval(code, interval):
-    return pd.read_sql(f"select * from {config.db_schema}.{table_name} where code='{code}' and interval='{interval}'",
-                       con=config.pd2db_conn())
+    df = pd.read_sql(f"select * from {config.db_schema}.{table_name} where code='{code}' and interval='{interval}'",
+                     con=config.pd2db_conn())
+    df.set_index('date', inplace=True)
+    return df

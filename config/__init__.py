@@ -33,7 +33,7 @@ class Config(object):
 class DevConfigWinLocal(Config):
     db_engine = 'postgresql+psycopg2'
     db_host = '127.0.0.1'
-    db_port = '5432'
+    db_port = '15432'
 
     def db_conn(self):
         return psycopg2.connect(database=self.db_database, user=self.db_user, password=self.db_password,

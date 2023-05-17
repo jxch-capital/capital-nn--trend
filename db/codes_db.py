@@ -14,6 +14,14 @@ def find_all():
     return pd.read_sql(f'select * from {config.db_schema}.{table_name}', con=config.pd2db_conn())
 
 
+def find_all_code():
+    df = find_all()
+    all_code = []
+    for index, row in df.iterrows():
+        all_code = all_code + row['codes'].split(',')
+    return all_code
+
+
 def table_index():
     with config.db_conn() as conn:
         cur = conn.cursor()
